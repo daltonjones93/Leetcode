@@ -4,7 +4,7 @@
 2.  [Valid Parentheses](#valid-parentheses)
 
 
-### [Two Sum](https://leetcode.com/problems/two-sum/)<a name="two-sum"></a>  \
+### [Two Sum](https://leetcode.com/problems/two-sum/)<a name="two-sum"></a>  
 
 This is possibly the most classic leetcode problem. The punchline is that searching and and membership can be determined in O(1) time
 by using a hash map. In a sense this uses a "hash" which maps keys to unique recoverable integers. This map can then be used to access
@@ -25,7 +25,7 @@ def twoSum(nums, target):
 
 
 
-### [Valid Parentheses](https://leetcode.com/problems/valid-parentheses/)<a name="valid-parentheses"></a>  \
+### [Valid Parentheses](https://leetcode.com/problems/valid-parentheses/)<a name="valid-parentheses"></a>  
 
 A classic use of a stack. Note that in this problem, we consider a sequence, where the sequence must hierarchically satisfy a condition.
 This can be achieved by considering the last valid entry and the future entries via a stack. Also use the fact that popping and appending are order 1 operations. There are actually other ways to do this, potentially using two pointers or a while loop and replace,
