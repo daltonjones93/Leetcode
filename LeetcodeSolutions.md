@@ -4,6 +4,7 @@
 2.  [Valid Parentheses](#valid-parentheses)
 3.  [Merge Two Sorted Lists](#merge-sorted-lists)
 4.  [Best Time To Buy And Sell A Stock](#buy-sell-stock)
+5.  [Valid Palindrome](#valid-palindrome)
 
 
 ### [Two Sum](https://leetcode.com/problems/two-sum/)<a name="two-sum"></a>  
@@ -135,3 +136,37 @@ def maxProfit(self, prices):
         
         return mx
 ```
+
+### [Valid Palindrome](https://leetcode.com/problems/valid-palindrome/)<a name="valid-palindrome"></a> 
+
+This question is a good example of using two pointers to check if something is the same front and back. The tricky parts are actually reading the problem to determine what actually constitutes a palindrome (only compare lowercase alphanumeric characters.) Nested while loops seem to do this effectively, and we get an order(n) solution.
+
+```python
+def isPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+
+        letter_set = set(string.ascii_lowercase + "0123456789")
+        s = s.lower()
+
+        l = 0
+        r = len(s) - 1
+        while l < r:
+            while l < r and s[l] not in letter_set:
+                l += 1
+            while l < r and s[r] not in letter_set:
+                r -= 1
+            if l == r:
+                break
+            if s[r] != s[l]:
+                return False
+            l += 1
+            r -= 1
+
+        return True
+
+```
+
+
