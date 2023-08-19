@@ -5,6 +5,7 @@
 3.  [Merge Two Sorted Lists](#merge-sorted-lists)
 4.  [Best Time To Buy And Sell A Stock](#buy-sell-stock)
 5.  [Valid Palindrome](#valid-palindrome)
+6.  [Invert Binary Tree](#invert-binary-tree)
 
 
 ### [Two Sum](https://leetcode.com/problems/two-sum/)<a name="two-sum"></a>  
@@ -166,6 +167,28 @@ def isPalindrome(self, s):
             r -= 1
 
         return True
+
+```
+
+### [Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)<a name="invert-binary-tree"></a>  
+
+This is a good example of using recursive functions. Essentially, set up the base case (end of the recursion) then perform the operation (this could come before or after recursive call, in this case before) then call the recursion. In this case, we switch the left and right nodes of the current root, then pass to left and right nodes and do the same thing there. 
+
+```python
+def invertTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: TreeNode
+        """
+        if root == None:
+            return
+
+
+        root.right, root.left = root.left, root.right
+        self.invertTree(root.left)
+        self.invertTree(root.right)
+        return root
+
 
 ```
 
