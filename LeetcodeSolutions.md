@@ -3,6 +3,7 @@
 1.  [Two Sum](#two-sum)
 2.  [Valid Parentheses](#valid-parentheses)
 3.  [Merge Two Sorted Lists](#merge-sorted-lists)
+4.  [Best Time To Buy And Sell A Stock](#buy-sell-stock)
 
 
 ### [Two Sum](https://leetcode.com/problems/two-sum/)<a name="two-sum"></a>  
@@ -108,4 +109,29 @@ def mergeTwoLists(self, list1, list2):
             return head
         else:
             return head
+```
+
+### [Best Time To Buy And Sell A Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)<a name="buy-sell-stock"></a> 
+
+You know, previously I had been solving this problem in a hacky way. I found a much more elegant way tracking the running minimum value and the computing profit afterward based on the difference between future values and that running minimum. Apparently this
+is dynamic programming, but honestly, it doesn't really feel like there's a "subproblem" to me really. Maybe the two suproblems are 
+what is the minimum up to the current point, and what would the resulting profit be if you bought and sold optimally in
+this time period. So I suppose it is dynamic programming.
+
+```python
+def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        
+        mx = 0
+        mn_price = prices[0]
+        for i in range(1,len(prices)):
+            if prices[i] > mn_price:
+                mx = max(mx,prices[i]-mn_price) #update max, this solves the subproblem
+            elif prices[i] < mn_price:
+                mn_price = prices[i] #update min for window
+        
+        return mx
 ```
