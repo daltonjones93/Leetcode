@@ -2,6 +2,7 @@
 
 1.  [Two Sum](#two-sum)
 2.  [Valid Parentheses](#valid-parentheses)
+3.  [Merge Two Sorted Lists](#merge-sorted-lists)
 
 
 ### [Two Sum](https://leetcode.com/problems/two-sum/)<a name="two-sum"></a>  
@@ -59,4 +60,52 @@ def isValid( s):
                     return False
         
         return len(stack) == 0
+```
+
+### [Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/)<a name="merge-sorted-lists"></a>  
+
+I mean this is a technique that shows up all over the place. The operation can be done with O(1) memory and O(n) operations, you
+just have to be a little bit careful about the details (for example, make sure you start with the right list and that you're
+moving lists to the next spot once you add nodes. I didn't and you can get an infinite loop in a while loop, which is interesting,
+but undesirable. This sort of thing should be second nature, so I should probably practice the pattern.
+
+```python
+def mergeTwoLists(self, list1, list2):
+        """
+        :type list1: Optional[ListNode]
+        :type list2: Optional[ListNode]
+        :rtype: Optional[ListNode]
+        """
+
+        if list1 == None:
+            return list2
+        elif list2 == None:
+            return list1
+        
+        if list1.val > list2.val:
+            head = list2
+            curr = head
+            list2 = list2.next
+        else:
+            head = list1
+            curr = head
+            list1 = list1.next
+        
+        while list1 and list2:
+            if list1.val <= list2.val:
+                curr.next =list1
+                list1 = list1.next
+            else:
+                curr.next =list2
+                list2 = list2.next
+            curr = curr.next
+        
+        if list1:
+            curr.next = list1
+            return head
+        elif list2:
+            curr.next = list2
+            return head
+        else:
+            return head
 ```
