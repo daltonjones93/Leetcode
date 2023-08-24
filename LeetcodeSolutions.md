@@ -6,6 +6,9 @@
 4.  [Best Time To Buy And Sell A Stock](#buy-sell-stock)
 5.  [Valid Palindrome](#valid-palindrome)
 6.  [Invert Binary Tree](#invert-binary-tree)
+7.  [Valid Anagram](#valid-anagram)
+8.  [Binary Search](#binary-search)
+9.  [Flood Fill](#flood-fill)
 
 
 ### [Two Sum](https://leetcode.com/problems/two-sum/)<a name="two-sum"></a>  
@@ -191,5 +194,105 @@ def invertTree(self, root):
 
 
 ```
+
+### [Valid Anagram](https://leetcode.com/problems/valid-anagram/)<a name="valid anagram"></a>  
+
+I suppose the lesson here is that when counting (and particularly when order doesn't matter, use a dictionary.) In our case we use the collections.Counter class since it's constructor automatically counts things
+
+```python
+def isAnagram(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+
+        if len(s) != len(t):
+            return False
+
+        return collections.Counter(s) == collections.Counter(t)
+```
+
+### [Binary Search](https://leetcode.com/problems/binary-search/)<a name="binary search"></a> 
+```python
+def search(self, nums: List[int], target: int) -> int:
+        
+        #arguably binary search is maybe one of the most 
+        #powerful ideas in cs. Basically you can cut a list in 
+        #half every time you look for an entry. Since it's sorted
+        #you know where to look, thus if you divide it by 2^n times,
+        #you get to one after len(nums)/2^n = 1 when n = log2(len(nums))
+        #much better than linear.
+        
+        #also important to point out, you can do it recursively, but this
+        #involves more function calls and is slower. Better to convert
+        #the "tail recursion" into a while loop
+        
+        l = 0
+        r = len(nums)-1
+        
+        while l < r:
+            m = (l+r) //2 #Note, this rounds down
+            if nums[m] == target:
+                return m #terminate early
+            elif nums[m] < target:
+                l = m+1 #number must be in a position greater than m
+            else:
+                r = m-1 #number must be in a position less than m
+        
+        if nums[l] == target:
+            return l
+        
+        return -1
+
+```
+### [Flood Fill](https://leetcode.com/problems/flood-fill/)<a name="flood fill"></a> 
+
+This is a great problem to practice both depth first and breadth first searches (as well as practicing the leetcode conventions of breaking recursion when you leave the edge of a board, image etc.) I've included implementations of the bfs and the dfs solutions here. Both are O(n).
+
+```python
+def floodFill(self, image: List[List[int]], sr: int, sc: int, color: int) -> List[List[int]]:
+
+        #I guess there's lots of ways to do this, just for variety,
+        #let's do the ol bfs
+
+        #bfs
+        if image[sr][sc] == color:
+            return image
+        q = collections.deque([(sr,sc)])
+        dirs = [0,1,0,-1,0]
+        orig_color = image[sr][sc]
+        while q:
+            x,y = q.popleft()
+            image[x][y] = color
+            for i in range(4):
+                nx = x + dirs[i]
+                ny = y + dirs[i+1]
+                if nx >= 0 and ny >= 0 and nx < len(image) and ny < len(image[0]) and image[nx][ny] == orig_color:
+                    q.append((nx,ny))
+        
+        return image
+
+
+def floodFill(self, image: List[List[int]], sr: int, sc: int, color: int) -> List[List[int]]:
+        if image[sr][sc] == color:
+            return image
+        self.dirs = [0,1,0,-1,0]
+        self.orig_color = image[sr][sc]
+
+        def dfs(x,y):
+
+            image[x][y] = color
+            for i in range(4):
+                nx = x + self.dirs[i]
+                ny = y + self.dirs[i+1]
+                if nx >= 0 and ny >= 0 and nx < len(image) and ny < len(image[0]) and image[nx][ny] == self.orig_color:
+                    dfs(nx,ny)
+        
+        dfs(sr,sc)
+        return image
+
+```
+
 
 
