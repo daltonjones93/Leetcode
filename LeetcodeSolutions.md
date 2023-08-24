@@ -9,6 +9,7 @@
 7.  [Valid Anagram](#valid-anagram)
 8.  [Binary Search](#binary-search)
 9.  [Flood Fill](#flood-fill)
+10. [Lowest Common Ancestor](#lowest-common-ancestor)
 
 
 ### [Two Sum](https://leetcode.com/problems/two-sum/)<a name="two-sum"></a>  
@@ -292,6 +293,31 @@ def floodFill(self, image: List[List[int]], sr: int, sc: int, color: int) -> Lis
         dfs(sr,sc)
         return image
 
+```
+### [Lowest Common Ancestor](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)<a name="lowest common ancestor"></a> 
+```python
+def lowestCommonAncestor(self, root, p, q):
+        """
+        :type root: TreeNode
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: TreeNode
+        """
+        
+        #the point of a binary search tree is that elements to the left of a node
+        #are less than a node, and greater on the right. This solution essentially becomes a binary
+        #search
+
+        if p.val > q.val:
+            return self.lowestCommonAncestor(root,q,p)
+
+        if p.val <= root.val <= q.val:
+            return root
+        elif q.val < root.val:
+            #move left
+            return self.lowestCommonAncestor(root.left,p,q)
+        else:
+            return self.lowestCommonAncestor(root.right,p,q)
 ```
 
 
