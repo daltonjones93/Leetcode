@@ -10,6 +10,7 @@
 8.  [Binary Search](#binary-search)
 9.  [Flood Fill](#flood-fill)
 10. [Lowest Common Ancestor](#lowest-common-ancestor)
+11. [Balanced Binary Tree](#balanced-binary-tree)
     
 
 
@@ -321,6 +322,40 @@ def lowestCommonAncestor(self, root, p, q):
         else:
             return self.lowestCommonAncestor(root.right,p,q)
 ```
+
+### [Balanced Binary Tree](https://leetcode.com/problems/balanced-binary-tree/)<a name="balanced binary tree"></a> 
+
+Plenty of ways to solve this problem, in particular, we need to solve for the height of each node, then measure the height of each 
+left and right branch.
+
+```python
+
+def height(self,root):
+
+        if not root:
+            return 0
+
+        return 1 + max(self.height(root.left),self.height(root.right))
+
+
+def isBalanced(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+
+        h1 = self.height(root.left)
+        h2 = self.height(root.right)
+
+        if abs(h1-h2) > 1:
+            return False
+        
+        return self.isBalanced(root.left) and self.isBalanced(root.right)
+        
+
+```
+
+
 
 
 
