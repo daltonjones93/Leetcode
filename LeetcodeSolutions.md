@@ -483,6 +483,7 @@ def canConstruct(self, ransomNote, magazine):
 ### [First Bad Version](https://leetcode.com/problems/first-bad-version/)<a name="first bad version"></a> 
 The trick here is recognizing we can use binary search really, the rest is pretty simple.
 
+
 ```python
 class Solution(object):
     def firstBadVersion(self, n):
