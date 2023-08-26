@@ -15,6 +15,15 @@
 13. [Implement Queue Using Stacks](#implement-queue-using-stacks)
 14. [Ransom Note](#ransom-note)
 15. [First Bad Version](#first-bad-version)
+16. [Climbing Stairs](#climbing-stairs)
+17. [Longest Palindrome](#longest-palindrome)
+18. [Reverse Linked List](#reverse-linked-list)
+19. [Majority Element](#majority-element)
+20. [Add Binary](#add-binary)
+21. [Diameter of Binary Tree](#diameter-of-binary-tree)
+22. [Middle of the Linked List](#middle-of-the-linked-list)
+23. [Contains Duplicate](#contains-duplicate)
+24. 
     
 
 
@@ -509,6 +518,270 @@ class Solution(object):
                 l = m + 1 #the first bad version must be in the interval m +1, l
             
         return l
+```
+
+### [Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)<a name="climbing stairs"></a> 
+Ah, the first foray into dynamic programming. The paradigm is this (with some variation): If I know the answer to the smaller problem can I solve the larger problem? Do I know the answer to the smallest problem? Then I can build a solution efficiently. In this case, we know there are only two ways to get to step k (from step k-1, k-2) hence the number of ways to get to step k is the number of ways to get to step k-1 plus the number of ways to get to step k-2. 
+
+```python
+def climbStairs(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+
+        #how many ways can you get to stair n? really just two
+        #one step from n-1 and one step from step n-2. We just need 
+        #to iterate on that
+
+        if n == 1:
+            return 1
+        if n == 2:
+            return 2
+
+        prev = 1
+        curr = 2
+        for i in range(3,n+1):
+            nxt = curr + prev
+            prev = curr
+            curr = nxt
+            
+        return curr
+
+```
+
+
+### [Longest Palindrome](https://leetcode.com/problems/longest-palindrome/)<a name="longest palindrome"></a>  
+This question always trips me up. Good lesson to actually read and understand the problem before working on it. It's not asking what the largest palindrome contained with s is (I think this requires a O(n^2) solution) it's asking what's the biggest palindrome can you make out of the letters in s. I think it's deliberately misleading.
+
+```python
+def longestPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+
+        c = collections.Counter(s)
+        odd_found = False
+        pal_size = 0
+        for k in c:
+            if c[k] % 2 ==1:
+                odd_found = True
+            pal_size += (c[k]//2)*2
+        if odd_found:
+            pal_size += 1
+        return pal_size
+
+```
+
+### [Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/)<a name="reverse linked list"></a>  
+
+```python
+class Solution(object):
+    def reverseList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        
+        #oh man, this gets used seriously all the time. This and 
+        #binary search everyone should be able to do in their sleep.
+
+        #edge cases:
+        if not head:
+            return head
+        if not head.next:
+            return head
+
+        
+        prev = head
+        curr = head.next
+        prev.next = None #this is critical
+
+        while curr:
+            tmp = curr.next
+            curr.next = prev
+            prev = curr
+            curr = tmp
+        
+        return prev
+```
+
+### [Majority Element](https://leetcode.com/problems/majority-element/)<a name="majority element"></a> 
+```python
+def majorityElement(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+
+        #several ways to do this, all O(n).
+
+        #this first method is somehow more efficient memory wise (it really shouldn't be.)
+        # c = collections.Counter(nums)
+        # for k in c:
+        #     if c[k] > len(nums) // 2:
+        #         return k
+
+        #second method, we know that the majority element must occur greater
+        #than half the time, meaning that if we keep a running count of the majority
+        #element so far, eventually the majority element will dominate.
+
+        #second method is O(1) memory use, O(n) time
+        m = nums[0]
+        cnt = 1
+        for i in range(1,len(nums)):
+            if nums[i] == m:
+                cnt += 1
+            else:
+                cnt -= 1
+            
+            if cnt == 0:
+                m = nums[i]
+                cnt = 1
+        
+        return m
+```
+
+### [Add Binary](https://leetcode.com/problems/add-binary/)<a name="add binary"></a> 
+
+```python
+class Solution(object):
+    def addBinary(self, a, b):
+        """
+        :type a: str
+        :type b: str
+        :rtype: str
+        """
+
+        #one of those cute one liners...
+
+        return "{0:b}".format(int(a,2) + int(b,2))
+
+        #really the spirit of the question I think would be to 
+        #convert the binary number to a base 10 number by hand
+        #or directly add the strings together. Which sounds annoying.
+        #could also use bin function
+```
+
+### [Diameter of Binary Tree](https://leetcode.com/problems/diameter-of-binary-tree/)<a name="diameter of binary tree"></a> 
+
+I love this question so much. So many great things to practice here, between designing a recursive function to return information relevant to higher recursive calls, working on edge cases and base cases for recursion and maximizing a related function within the recursive function. Great.
+```python
+class Solution(object):
+    def diameterOfBinaryTree(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+
+        #god I love trees. Great practice for recursive functions.
+
+        #what we want is a function that can calculate the height of each 
+        #node and track the maximum diameter containing each node,
+        if root == None:
+            return root
+        
+        self.diam = 0
+        def get_diam(root):
+
+            if root == None:
+                return 0
+            
+            lh = get_diam(root.left)
+            rh = get_diam(root.right)
+            self.diam = max(self.diam, lh + rh)
+            return 1 + max(lh,rh)
+        
+        get_diam(root)
+        return self.diam
+```
+
+
+### [Middle of the Linked List](https://leetcode.com/problems/middle-of-the-linked-list/)<a name="middle of the linked list"></a> 
+
+This is another very useful trick that used in a fair amount of other problems. So we can use fast and slow nodes to find specific locations within a list and to detect cycles. And probably other things too, but those are the applications we've seen for this method so far.
+```python
+def middleNode(self, head):
+        """
+        # :type head: ListNode
+        # :rtype: ListNode
+        # 
+        """
+
+        #Another fast slow sort of thing. 
+        #you could also count to the end of the list and go back, which actually I beleive is the same number of operations with less memory? (Although they're both 
+        #O(1))
+
+        #solution 1
+        cnt = 0
+        curr = head
+        while curr:
+            curr = curr.next
+            cnt+=1
+        
+        mid = cnt // 2 #think about why this is true!! Indexing is very annoying
+        cnt = 0
+        curr = head
+        while curr:
+            if cnt == mid:
+                return curr
+            curr = curr.next
+            cnt+=1
+
+        #solution 2: This is really what they're looking for 
+        slow = head
+        fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        #think about why this always results in the right answer (small cases suffice think 3/4 nodes)
+
+        return slow
+
+```
+
+### [Maximum Depth](https://leetcode.com/problems/maximum-depth/)<a name="maximum depth"></a> 
+I guess computing the height of a branch is an important pattern for later problems, whether we're computing the height, or say summing nodes or finding the maximum value along a path or something. All the same pattern.
+```python
+class Solution(object):
+    def maxDepth(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+
+        #isn't this just computing the height??
+        if root == None:
+            return 0
+        
+        return 1 + max(self.maxDepth(root.left),self.maxDepth(root.right))
+```
+
+### [Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)<a name="contains duplicate"></a> 
+Another example of the usefulness of a set (hashmap) to keep track of the number of things.
+```python
+def containsDuplicate(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: bool
+        """
+
+        #just use a set
+
+        # return len(set(nums)) != len(nums)
+
+        #memory isn't so good
+
+        c = collections.Counter()
+        while nums:
+            n = nums.pop()
+            if c[n] > 0:
+                return True
+            c[n] += 1
+        return False
+
 ```
 
 
