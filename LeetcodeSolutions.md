@@ -14,6 +14,7 @@
 12. [Has Cycle](#has-cycle)
 13. [Implement Queue Using Stacks](#implement-queue-using-stacks)
 14. [Ransom Note](#ransom-note)
+15. [First Bad Version](#first-bad-version)
     
 
 
@@ -477,6 +478,36 @@ def canConstruct(self, ransomNote, magazine):
             if cm[l] < cr[l]:
                 return False
         return True
+```
+
+### [First Bad Version](https://leetcode.com/problems/first-bad-version/)<a name="first bad version"></a> 
+The trick here is recognizing we can use binary search really, the rest is pretty simple.
+
+```python
+class Solution(object):
+    def firstBadVersion(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+
+        #the trick here is to recognize that we can perform binary search
+        #instead of the condition relating to < target etc we have the version
+        #condition, which amounts to the same thing
+
+        l = 1
+        r = n
+        
+        while l < r:
+            m = (l + r) // 2
+
+            b = isBadVersion(m)
+            if b:
+                r = m #the first bad version must be in the interval l,m
+            else:
+                l = m + 1 #the first bad version must be in the interval m +1, l
+            
+        return l
 ```
 
 
