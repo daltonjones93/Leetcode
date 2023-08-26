@@ -24,6 +24,7 @@
 22. [Middle of the Linked List](#middle-of-the-linked-list)
 23. [Contains Duplicate](#contains-duplicate)
 24. [Roman To Integer](#roman-to-integer)
+25. [Backspace Compare](#backspace-compare)
     
 
 
@@ -809,6 +810,41 @@ class Solution(object):
                 n+= d[s[i]]
 
         return n
+
+```
+
+
+### [Backspace Compare](https://leetcode.com/problems/backspace-compare/)<a name="backspace compare"></a> 
+Man I originally thought this problem was impossible (which, if you don't use a stack, it is super annoying.) Punchline? Use a stack.
+```python
+def backspaceCompare(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+
+
+        #I think I was making this way too hard before. This is pretty clearly
+        #just a stack problem. I've come a long way since march.
+
+        sstack =[]
+        tstack = []
+
+        for l in s:
+            if l == "#":
+                if sstack:
+                    sstack.pop()
+            else:
+                sstack.append(l)
+        for l in t:
+            if l == "#":
+                if tstack:
+                    tstack.pop()
+            else:
+                tstack.append(l)
+        
+        return sstack == tstack
 
 ```
 
