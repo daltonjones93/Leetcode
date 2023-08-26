@@ -23,7 +23,7 @@
 21. [Diameter of Binary Tree](#diameter-of-binary-tree)
 22. [Middle of the Linked List](#middle-of-the-linked-list)
 23. [Contains Duplicate](#contains-duplicate)
-24. 
+24. [Roman To Integer](#roman-to-integer)
     
 
 
@@ -781,6 +781,34 @@ def containsDuplicate(self, nums):
                 return True
             c[n] += 1
         return False
+
+```
+
+
+
+### [Roman To Integer](https://leetcode.com/problems/roman-to-integer/)<a name="roman to integer"></a> 
+This problem has a sort of stack feel in that we're traversing a string backwards (we could actually
+convert it into a list and pop off elements over time too, we just don't need to. Numerals have different meanings based on their ordering, so just keep track of s[i], s[i+1] as i moves backwards and you can perform the op. 
+```python
+class Solution(object):
+    def romanToInt(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+
+        d = {"I":1,"V":5,"X":10,"L":50,"C":100,"D":500, "M":1000}
+
+        n = 0
+        for i in reversed(range(len(s))):
+
+            if i != len(s)-1 and d[s[i]] < d[s[i+1]]:
+                n -= d[s[i]]
+            
+            else:
+                n+= d[s[i]]
+
+        return n
 
 ```
 
