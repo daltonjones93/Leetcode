@@ -11,6 +11,9 @@
 9.  [Flood Fill](#flood-fill)
 10. [Lowest Common Ancestor](#lowest-common-ancestor)
 11. [Balanced Binary Tree](#balanced-binary-tree)
+12. [Has Cycle](#has-cycle)
+13. [Implement Queue Using Stacks](#implement-queue-using-stacks)
+14. [Ransom Note](#ransom-note)
     
 
 
@@ -353,6 +356,127 @@ def isBalanced(self, root):
         return self.isBalanced(root.left) and self.isBalanced(root.right)
         
 
+```
+### [Has Cycle](https://leetcode.com/problems/has-cycle/)<a name="has cycle"></a> 
+
+The trick here is to use one fast node and one slow node. This technique shows up in other places as well (finding middle of the list for example.) But yeah cycle detection should probably be done this way. Several things to node. Start fast and slow at different spots, and only put while loop conditions on fast (since it's going to reach the end of the list first, since it's fast.)
+
+```python
+class Solution(object):
+    def hasCycle(self, head):
+        """
+        :type head: ListNode
+        :rtype: bool
+        """
+
+        #this is a classic algorithm. 
+
+        #classic solution:
+        slow = head
+        fast = head.next
+        while fast and fast.next:
+            if slow == fast:
+                return True
+            slow = slow.next
+            fast = fast.next.next
+            
+        return False
+```
+
+### [Implement Queue Using Stacks](https://leetcode.com/problems/implement-queue-using-stacks/)<a name="implement queue using stacks"></a> 
+
+Turns out I did not read the instructions here, but below we'll find the correct code. The idea is to, when you need to access 
+the first element of the input list, keep popping it and appending the result to the output, which should be in the reverse order. Only do this when output is empty, since otherwise it would mess up the order. 
+
+```python
+class MyQueue(object):
+
+    def __init__(self):
+        
+        # self.L = []
+        
+        # self.Q = []
+        # self.lind = 0
+
+        self.input = []
+        self.output = []
+        
+
+    def push(self, x):
+        """
+        :type x: int
+        :rtype: None
+        """
+        # self.L.append(x)
+        self.input.append(x)
+        
+
+    def pop(self):
+        """
+        :rtype: int
+        """
+
+        #for this we need to pop the back of the list input
+        if self.output:
+            return self.output.pop()
+        else:
+            while self.input:
+                self.output.append(self.input.pop())
+        
+        return self.output.pop()
+        # return self.L.pop(0)
+        # v = self.Q[self.lind]
+        # self.lind += 1
+        # return v
+        
+
+    def peek(self):
+        """
+        :rtype: int
+        """
+        # return self.L[0]
+        if self.output:
+            return self.output[-1]
+        else:
+            while self.input:
+                self.output.append(self.input.pop())
+        
+        return self.output[-1]
+        
+
+        
+
+    def empty(self):
+        """
+        :rtype: bool
+        """
+        # return len(self.L) == 0
+
+        return (not self.input) and (not self.output)
+```
+
+
+### [Ransom Note](https://leetcode.com/problems/ransom-note/)<a name="ransom note"></a> 
+The trick here is to note that order doesn't matter, we just need to track letter frequency. The collections.Counter module
+is very convenient for this (similar to defaultdict it doesn't throw key errors.) 
+
+```python
+def canConstruct(self, ransomNote, magazine):
+        """
+        :type ransomNote: str
+        :type magazine: str
+        :rtype: bool
+        """
+
+        #another counting problem. Note that order
+        #doesnt matter! which should make us think of a dictionary
+        #or a set
+        cm = collections.Counter(magazine)
+        cr = collections.Counter(ransomNote)
+        for l in cr:
+            if cm[l] < cr[l]:
+                return False
+        return True
 ```
 
 
