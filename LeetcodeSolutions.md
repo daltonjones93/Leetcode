@@ -25,8 +25,21 @@
 23. [Contains Duplicate](#contains-duplicate)
 24. [Roman To Integer](#roman-to-integer)
 25. [Backspace Compare](#backspace-compare)
+26. [Count Bits](#count-bits)
+27. [Same Tree](#same-tree)
+28. [Number of 1 Bits](#number-of-1-bits)
+29. [Longest Common Prefix](#longest-common-prefix)
+30. [Single Number](#single-number)
+31. [Palindrome Linked List](#palindrome-linked-list)
+32. [Move Zeros](#move-zeros)
+33. [Symmetric Tree](#symmetric-tree)
+34. [Missing Number](#missing-number)
+35. [Palindrome Number](#palindrome-number)
+36. [Convert Sorted Array To Binary Search Tree](#convert-sorted-array-to-binary-search-tree)
+37. [Reverse Bits](#reverse-bits)
+38. [Subtree of Another Tree](#subtree-of-another-tree)
+39. [Squares of A Sorted Array](#squares-of-a-sorted-array)
     
-
 
 ### [Two Sum](https://leetcode.com/problems/two-sum/)<a name="two-sum"></a>  
 
@@ -212,7 +225,7 @@ def invertTree(self, root):
 
 ```
 
-### [Valid Anagram](https://leetcode.com/problems/valid-anagram/)<a name="valid anagram"></a>  
+### [Valid Anagram](https://leetcode.com/problems/valid-anagram/)<a name="valid-anagram"></a>  
 
 I suppose the lesson here is that when counting (and particularly when order doesn't matter, use a dictionary.) In our case we use the collections.Counter class since it's constructor automatically counts things
 
@@ -230,7 +243,7 @@ def isAnagram(self, s, t):
         return collections.Counter(s) == collections.Counter(t)
 ```
 
-### [Binary Search](https://leetcode.com/problems/binary-search/)<a name="binary search"></a> 
+### [Binary Search](https://leetcode.com/problems/binary-search/)<a name="binary-search"></a> 
 ```python
 def search(self, nums: List[int], target: int) -> int:
         
@@ -263,7 +276,7 @@ def search(self, nums: List[int], target: int) -> int:
         return -1
 
 ```
-### [Flood Fill](https://leetcode.com/problems/flood-fill/)<a name="flood fill"></a> 
+### [Flood Fill](https://leetcode.com/problems/flood-fill/)<a name="flood-fill"></a> 
 
 This is a great problem to practice both depth first and breadth first searches (as well as practicing the leetcode conventions of breaking recursion when you leave the edge of a board, image etc.) I've included implementations of the bfs and the dfs solutions here. Both are O(n).
 
@@ -311,7 +324,7 @@ def floodFill(self, image: List[List[int]], sr: int, sc: int, color: int) -> Lis
 
 ```
 
-### [Lowest Common Ancestor](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)<a name="lowest common ancestor"></a> 
+### [Lowest Common Ancestor](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)<a name="lowest-common-ancestor"></a> 
 ```python
 def lowestCommonAncestor(self, root, p, q):
         """
@@ -337,7 +350,7 @@ def lowestCommonAncestor(self, root, p, q):
             return self.lowestCommonAncestor(root.right,p,q)
 ```
 
-### [Balanced Binary Tree](https://leetcode.com/problems/balanced-binary-tree/)<a name="balanced binary tree"></a> 
+### [Balanced Binary Tree](https://leetcode.com/problems/balanced-binary-tree/)<a name="balanced-binary-tree"></a> 
 
 Plenty of ways to solve this problem, in particular, we need to solve for the height of each node, then measure the height of each 
 left and right branch.
@@ -467,7 +480,7 @@ class MyQueue(object):
 ```
 
 
-### [Ransom Note](https://leetcode.com/problems/ransom-note/)<a name="ransom note"></a> 
+### [Ransom Note](https://leetcode.com/problems/ransom-note/)<a name="ransom-note"></a> 
 The trick here is to note that order doesn't matter, we just need to track letter frequency. The collections.Counter module
 is very convenient for this (similar to defaultdict it doesn't throw key errors.) 
 
@@ -490,7 +503,7 @@ def canConstruct(self, ransomNote, magazine):
         return True
 ```
 
-### [First Bad Version](https://leetcode.com/problems/first-bad-version/)<a name="first bad version"></a> 
+### [First Bad Version](https://leetcode.com/problems/first-bad-version/)<a name="first-bad-version"></a> 
 The trick here is recognizing we can use binary search really, the rest is pretty simple.
 
 
@@ -521,7 +534,7 @@ class Solution(object):
         return l
 ```
 
-### [Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)<a name="climbing stairs"></a> 
+### [Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)<a name="climbing-stairs"></a> 
 Ah, the first foray into dynamic programming. The paradigm is this (with some variation): If I know the answer to the smaller problem can I solve the larger problem? Do I know the answer to the smallest problem? Then I can build a solution efficiently. In this case, we know there are only two ways to get to step k (from step k-1, k-2) hence the number of ways to get to step k is the number of ways to get to step k-1 plus the number of ways to get to step k-2. 
 
 ```python
@@ -552,7 +565,7 @@ def climbStairs(self, n):
 ```
 
 
-### [Longest Palindrome](https://leetcode.com/problems/longest-palindrome/)<a name="longest palindrome"></a>  
+### [Longest Palindrome](https://leetcode.com/problems/longest-palindrome/)<a name="longest-palindrome"></a>  
 This question always trips me up. Good lesson to actually read and understand the problem before working on it. It's not asking what the largest palindrome contained with s is (I think this requires a O(n^2) solution) it's asking what's the biggest palindrome can you make out of the letters in s. I think it's deliberately misleading.
 
 ```python
@@ -575,7 +588,7 @@ def longestPalindrome(self, s):
 
 ```
 
-### [Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/)<a name="reverse linked list"></a>  
+### [Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/)<a name="reverse-linked-list"></a>  
 
 ```python
 class Solution(object):
@@ -608,7 +621,7 @@ class Solution(object):
         return prev
 ```
 
-### [Majority Element](https://leetcode.com/problems/majority-element/)<a name="majority element"></a> 
+### [Majority Element](https://leetcode.com/problems/majority-element/)<a name="majority-element"></a> 
 ```python
 def majorityElement(self, nums):
         """
@@ -644,7 +657,7 @@ def majorityElement(self, nums):
         return m
 ```
 
-### [Add Binary](https://leetcode.com/problems/add-binary/)<a name="add binary"></a> 
+### [Add Binary](https://leetcode.com/problems/add-binary/)<a name="add-binary"></a> 
 
 ```python
 class Solution(object):
@@ -665,7 +678,7 @@ class Solution(object):
         #could also use bin function
 ```
 
-### [Diameter of Binary Tree](https://leetcode.com/problems/diameter-of-binary-tree/)<a name="diameter of binary tree"></a> 
+### [Diameter of Binary Tree](https://leetcode.com/problems/diameter-of-binary-tree/)<a name="diameter-of-binary-tree"></a> 
 
 I love this question so much. So many great things to practice here, between designing a recursive function to return information relevant to higher recursive calls, working on edge cases and base cases for recursion and maximizing a related function within the recursive function. Great.
 ```python
@@ -699,7 +712,7 @@ class Solution(object):
 ```
 
 
-### [Middle of the Linked List](https://leetcode.com/problems/middle-of-the-linked-list/)<a name="middle of the linked list"></a> 
+### [Middle of the Linked List](https://leetcode.com/problems/middle-of-the-linked-list/)<a name="middle-of-the-linked-list"></a> 
 
 This is another very useful trick that used in a fair amount of other problems. So we can use fast and slow nodes to find specific locations within a list and to detect cycles. And probably other things too, but those are the applications we've seen for this method so far.
 ```python
@@ -743,7 +756,7 @@ def middleNode(self, head):
 
 ```
 
-### [Maximum Depth](https://leetcode.com/problems/maximum-depth/)<a name="maximum depth"></a> 
+### [Maximum Depth](https://leetcode.com/problems/maximum-depth/)<a name="maximum-depth"></a> 
 I guess computing the height of a branch is an important pattern for later problems, whether we're computing the height, or say summing nodes or finding the maximum value along a path or something. All the same pattern.
 ```python
 class Solution(object):
@@ -760,7 +773,7 @@ class Solution(object):
         return 1 + max(self.maxDepth(root.left),self.maxDepth(root.right))
 ```
 
-### [Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)<a name="contains duplicate"></a> 
+### [Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)<a name="contains-duplicate"></a> 
 Another example of the usefulness of a set (hashmap) to keep track of the number of things.
 ```python
 def containsDuplicate(self, nums):
@@ -787,7 +800,7 @@ def containsDuplicate(self, nums):
 
 
 
-### [Roman To Integer](https://leetcode.com/problems/roman-to-integer/)<a name="roman to integer"></a> 
+### [Roman To Integer](https://leetcode.com/problems/roman-to-integer/)<a name="roman-to-integer"></a> 
 This problem has a sort of stack feel in that we're traversing a string backwards (we could actually
 convert it into a list and pop off elements over time too, we just don't need to. Numerals have different meanings based on their ordering, so just keep track of s[i], s[i+1] as i moves backwards and you can perform the op. 
 ```python
@@ -814,7 +827,7 @@ class Solution(object):
 ```
 
 
-### [Backspace Compare](https://leetcode.com/problems/backspace-compare/)<a name="backspace compare"></a> 
+### [Backspace Compare](https://leetcode.com/problems/backspace-compare/)<a name="backspace-compare"></a> 
 Man I originally thought this problem was impossible (which, if you don't use a stack, it is super annoying.) Punchline? Use a stack.
 ```python
 def backspaceCompare(self, s, t):
@@ -848,6 +861,349 @@ def backspaceCompare(self, s, t):
 
 ```
 
+### [Count Bits](https://leetcode.com/problems/count-bits/)<a name="count-bits"></a> 
+
+```python
+def countBits(self, n):
+        """
+        :type n: int
+        :rtype: List[int]
+        """
+
+        if n == 0:
+            return [0]
+        if n == 1:
+            return [0,1]
+        if n == 2:
+            return [0,1,1]
+        dp = [0,1,1]
+
+        for i in range(3,n+1):
+            dp.append(dp[i >> 1] + i % 2)
+        
+        return dp
+```
+### [Same Tree](https://leetcode.com/problems/same-tree/)<a name="same-tree"></a> 
+```python
+def isSameTree(self, p, q):
+        """
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: bool
+        """
+
+        #recurse together...
+        if not p and not q:
+            return True
+        elif not p and q:
+            return False
+        elif not q and p:
+            return False
+        elif p.val != q.val:
+            return False
+        
+        
+        return self.isSameTree(p.left,q.left) and self.isSameTree(p.right,q.right)
+```
+
+### [Number of 1 Bits](https://leetcode.com/problems/number-of-1-bits/)<a name="number-of-1-bits"></a> 
+```python
+def hammingWeight(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+
+        return bin(n).count("1")
+
+
+
+        # h_weight = 0
+        # while n > 0:
+        #     h_weight += n % 2
+        #     n >>= 1
+        # return h_weight
+```
+
+
+### [Longest Common Prefix](https://leetcode.com/problems/longest-common-prefix/)<a name="longest-common-prefix"></a> 
+
+```python
+def longestCommonPrefix(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: str
+        """
+
+        
+
+        pr = ""
+        for i in range(len(strs[0])):
+            cand = strs[0][i]
+            for s in strs:
+                if i >= len(s) or s[i] != cand:
+                    return pr
+            pr += cand
+        
+        return pr
+```
+### [Single Number](https://leetcode.com/problems/single-number/)<a name="single-number"></a> 
+```python
+def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        snums = collections.Counter()
+        while nums:
+            n = nums.pop()
+            if snums[n] >0:
+                del snums[n]
+            else:
+                snums[n] =1
+        
+        return snums.keys()[0]
+
+```
+### [Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list/)<a name="palindrome-linked-list"></a> 
+```python
+def isPalindrome(self, head):
+        """
+        :type head: ListNode
+        :rtype: bool
+        """
+
+        #ah, a beautiful combination of two other problems we've done
+
+        #first, find the middle of the list, 
+        #second reverse the list
+        #third traverse the reversed list and the forward half at the same time
+        #to make sure they're equal.
+
+        #the only trick is how far to reverse and how far to check...
+
+        if not head.next:
+            return True
+        if not head.next.next:
+            if head.val == head.next.val:
+                return True
+            else:
+                return False
+
+        
+        
+        #find middle:
+        
+        slow = head
+        fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        
+        if fast: #this means it's odd
+            slow = slow.next
+        
+        #reverse list
+        prev = slow
+        curr = slow.next
+        prev.next = None
+
+        while curr:
+            tmp = curr.next
+            curr.next = prev
+            prev = curr
+            curr = tmp
+        
+        #prev is the new head
+        while prev:
+            if prev.val != head.val:
+                return False
+            prev = prev.next
+            head = head.next
+        
+        return True
+```
+### [Move Zeros](https://leetcode.com/problems/move-zeros/)<a name="move-zeros"></a> 
+```python
+def moveZeroes(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: None Do not return anything, modify nums in-place instead.
+        """
+
+
+        #this is really just a question of keeping track of the number of zeros
+        #and then just translating back
+        nzero = 0
+        for i in range(len(nums)):
+            if nums[i]== 0:
+                nzero+=1
+            else:
+                nums[i-nzero] = nums[i]
+        
+        for i in range(1, nzero+1):
+            nums[-i] = 0
+        return nums
+```
+
+### [Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)<a name="symmetric tree"></a> 
+This one definitely gave me fits. Check pairs at a time, not their children.
+``` python
+def isSymmetric(self, root: Optional[TreeNode]) -> bool:
+
+        def rec_check(r1,r2):
+            
+            if r1 == r2 == None:
+                return True
+            elif r1 == None or r2 == None:
+                return False
+            elif r1.val != r2.val:
+                return False
+
+            return rec_check(r1.left,r2.right) and rec_check(r1.right,r2.left)
+        
+        return rec_check(root.left,root.right)
+```
+
+### [Missing Number](https://leetcode.com/problems/missing-number/)<a name="missing-number"></a> 
+Credit to ol Gauss for this one. Jesus, what a genius.
+```python
+def missingNumber(self, nums: List[int]) -> int:
+
+        return (len(nums) * (len(nums)+1))//2 - sum(nums)
+```
+
+### [Palindrome Number](https://leetcode.com/problems/palindrome-number/)<a name="palindrome-number"></a>
+Pretty straightforward, use two pointers, convert to a string.
+```python
+def isPalindrome(self, x):
+        """
+        :type x: int
+        :rtype: bool
+        """
+        if x < 0:
+            return False
+        
+        
+        x = str(x)
+        l = 0
+        r = len(x) - 1
+        while l < r:
+            if x[l] != x[r]:
+                return False
+            l +=1
+            r -=1
+        return True
+```
+
+### [Convert Sorted Array To Binary Search Tree](https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/)<a name="convert-sorted-array-to-binary-search-tree"></a>  
+Really Can't say enough about this problem. Such a good example of how to think about recursion, binary search, base/edge cases, you name it. 
+```python
+def sortedArrayToBST(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: TreeNode
+        """
+
+
+        def build_tree(l,r):
+            if l > r:
+                return None
+            m = (l+r)//2
+            root = TreeNode(nums[m])
+            root.left = build_tree(l,m-1)
+            root.right = build_tree(m+1, r)
+            return root
+
+        return build_tree(0,len(nums)-1)
+```
+
+### [Reverse Bits](https://leetcode.com/problems/reverse-bits/)<a name="reverse-bits"></a>
+```python
+def reverseBits(self, n: int) -> int:
+
+         
+        b = '{:032b}'.format(n)
+        b = b[::-1]
+        return int(b,2)
+```
+
+
+### [Subtree of Another Tree](https://leetcode.com/problems/subtree-of-another-tree/)<a name="subtree-of-another-tree"></a>
+
+```python
+def isEqual(root, subRoot):
+
+    if not root and not subRoot:
+        return True
+    elif not root or not subRoot:
+        return False
+    elif root.val != subRoot.val:
+        return False
+    
+    return isEqual(root.left,subRoot.left) and isEqual(root.right, subRoot.right)
+
+class Solution:
+    def isSubtree(self, root: Optional[TreeNode], subRoot: Optional[TreeNode]) -> bool:
+
+        if isEqual(root,subRoot):
+            return True
+        
+        if root.left and root.right:
+            return self.isSubtree(root.left, subRoot) or self.isSubtree(root.right, subRoot)
+        elif root.left:
+            return self.isSubtree(root.left, subRoot)
+        elif root.right:
+            return self.isSubtree(root.right, subRoot)
+        else:
+            return False
+```
+
+
+### [Squares of a Sorted Array](https://leetcode.com/problems/squares-of-a-sorted-array/)<a name="squares-of-a-sorted-array"></a>
+```python
+def sortedSquares(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        neg = False
+        pnums = []
+        nnums = collections.deque()
+        for n in nums:
+            if n < 0:
+                nnums.appendleft(n**2)
+            else:
+                pnums.append(n**2)
+        
+        if not nnums:
+            return pnums
+        elif not pnums:
+            return nnums
+
+        del nums
+        
+        ret = []
+        indn = 0
+        indp = 0
+
+        while indn < len(nnums) and indp < len(pnums):
+            if nnums[indn] < pnums[indp]:
+                ret.append(nnums[indn])
+                indn += 1
+            else:
+                ret.append(pnums[indp])
+                indp += 1
+        if indn < len(nnums):
+            
+            ret += list(collections.deque(itertools.islice(nnums, indn, len(nnums))))
+        elif indp < len(pnums):
+            ret += pnums[indp:]
+        return ret
+
+```
+
+        
 
 
 
