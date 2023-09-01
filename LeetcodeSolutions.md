@@ -39,6 +39,12 @@
 37. [Reverse Bits](#reverse-bits)
 38. [Subtree of Another Tree](#subtree-of-another-tree)
 39. [Squares of A Sorted Array](#squares-of-a-sorted-array)
+40. [Maximum Subarray](#maximum-subarray)
+41. [Update Matrix](#update-matrix)
+42. [K Closest Points To Origin](#k-closest-points-to-origin)
+43. [Longest Substring Without Repeating Characters](#Longest-Substring-Without-Repeating-Characters)
+44. [3Sum](#3sum)
+45. 
     
 
 ### [Two Sum](https://leetcode.com/problems/two-sum/)<a name="two-sum"></a>  
@@ -1203,7 +1209,154 @@ def sortedSquares(self, nums):
 
 ```
 
+
+### [Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)<a name="maximum-subarray"></a>  
+
+This is such an important pattern and problem. Well worth thinking about why the below solution works (dp really.)
+
+```python
+
+def maxSubArray(self, nums: List[int]) -> int:
+
         
+        m = nums[0]
+        p = nums[0]
+        for i in range(1,len(nums)):
+            p = max(nums[i],nums[i] + p) #question, do we include the previous number in the current subarray? prior max interval up to i-1 containing i-1 is p
+            m = max(m,p)
+
+        return m
+
+```
+
+### [Insert Interval](https://leetcode.com/problems/insert-interval/)<a name="insert-interval"></a>  
+
+This is such a rough question in terms of corner cases, definitely worth doing it multiple times in the future.
+
+```python
+def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
+
+        #looking at this again, this feels like a stack question.
+
+        if not intervals:
+            return [newInterval]
+
+        #some corner cases
+        if newInterval[1] < intervals[0][0]:
+            return [newInterval]+intervals
+        elif newInterval[0] > intervals[-1][1]:
+            return intervals+[newInterval]
+        
+        stack = []
+        i = 0
+        while i < len(intervals):
+            ivl = intervals[i]
+            if ivl[1] < newInterval[0]:
+                stack.append(ivl)
+                i += 1
+            elif ivl[0] > newInterval[1]:
+                stack.append(ivl)
+                i += 1
+            else:
+                stack.append([min(ivl[0],newInterval[0]),max(ivl[1],newInterval[1])])
+                while i < len(intervals) and intervals[i][0] <= stack[-1][1]:
+                    stack[-1][1] = max(stack[-1][1],intervals[i][1])
+                    i += 1
+
+            if i < len(intervals) and intervals[i-1][1] < newInterval[0] and newInterval[1] < intervals[i][0]:
+                stack.append(newInterval)
+                    
+
+        return stack
+
+```
+
+
+### [Update Matrix](https://leetcode.com/problems/update-matrix/)<a name="update-matrix"></a>  
+```python
+def updateMatrix(self, mat: List[List[int]]) -> List[List[int]]:
+
+        q = collections.deque()
+        visited = set()
+        for i in range(len(mat)):
+            for j in range(len(mat[0])):
+                if mat[i][j] == 0:
+                    q.append((i,j))
+                    visited.add((i,j))
+        dirs = [0,1,0,-1,0]
+        while q:
+            x,y = q.popleft()
+
+            for i in range(4):
+                nx,ny = x+ dirs[i],y + dirs[i+1]
+                if nx >= 0 and ny >= 0 and nx < len(mat) and ny < len(mat[0]) and (nx,ny) not in visited:
+                    visited.add((nx,ny))
+                    q.append((nx,ny))
+                    mat[nx][ny] = 1 + mat[x][y]
+        
+        return mat
+```
+
+
+
+
+### [K Closest Points To Origin](https://leetcode.com/problems/k-closest-points-to-origin/)<a name="k-closest-points-to-origin"></a>  
+I love a good python 1 liner.
+```python
+def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+
+        return sorted(points, key = lambda x:x[0]**2 + x[1]**2)[:k]
+```
+
+### [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)<a name="longest-substring-without-repeating-characters"></a>  
+```python
+def lengthOfLongestSubstring(self, s: str) -> int:
+
+        #think sliding window
+        if s == "":
+            return 0
+
+        l = 0
+        r = 1
+        c = defaultdict(int)
+        c[s[0]] = 1
+        m = 1
+        while r < len(s):
+
+            c[s[r]] += 1
+
+            while c[s[r]] > 1:
+                c[s[l]]-= 1
+                l += 1
+
+            m = max(r-l+1,m)
+
+            r +=1
+        return m
+```
+
+
+### [3sum](https://leetcode.com/problems/3sum/)<a name="3sum"></a>  
+```python
+def threeSum(self, nums: List[int]) -> List[List[int]]:
+
+        nums.sort()
+        ret = []
+        for i in range(len(nums)-2):
+            l = i+1
+            r = len(nums)-1
+            while l < r:
+                if nums[i] + nums[l] + nums[r] > 0:
+                    r -= 1
+                elif nums[i] + nums[l] + nums[r] < 0:
+                    l += 1
+                else:
+                    ret.add((nums[i],nums[l],nums[r]))
+                    l += 1
+                    r -= 1
+        return ret
+```
+
 
 
 
