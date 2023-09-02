@@ -48,7 +48,12 @@
 46. [Evaluate Reverse Polish Notation](#evaluate-reverse-polish-notation)
 47. [Implement Trie](#implement-trie)
 48. [Coin Change](#coin-change)
-49. 
+49. [Validate Binary Tree](#validate-binary-search-tree)
+50. [Number of Islands](#number-of-islands)
+51. [Rotting Oranges](#rotting-oranges)
+52. [Product of Array Except Self](#product-of-array-except-self)
+53. [Min Stack](#min-stack)
+54. 
     
 
 ### [Two Sum](https://leetcode.com/problems/two-sum/)<a name="two-sum"></a>  
@@ -1487,6 +1492,151 @@ def coinChange(self, coins: List[int], amount: int) -> int:
             return -1
         
         return dp[-1]
+
+```
+
+
+
+### [Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/)<a name="validate-binary-search-tree"></a>  
+```python
+def isValidBST(self, root: Optional[TreeNode]) -> bool:
+
+        self.prev = -math.inf
+        self.valid = True
+        def inorder(root):
+
+            if not root:
+                return
+            
+            inorder(root.left)
+            if self.prev >= root.val:
+                self.valid = False
+                return
+            self.prev = root.val
+            inorder(root.right)
+        
+        inorder(root)
+        return self.valid
+
+```
+
+### [Number of Islands](https://leetcode.com/problems/number-of-islands/)<a name="number-of-islands"></a> 
+```python
+def numIslands(self, grid: List[List[str]]) -> int:
+
+        dirs = [0,1,0,-1,0]
+        def dfs(x,y):
+
+            for i in range(4):
+                nx,ny = x + dirs[i],y+dirs[i+1]
+
+                if nx >=0 and ny >= 0 and nx < len(grid) and ny < len(grid[0]) and grid[nx][ny] == "1":
+                    grid[nx][ny] = "2"
+                    dfs(nx,ny)
+        
+        num_islands = 0
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j] == "1":
+                    num_islands+=1
+                    grid[i][j] = "2"
+                    dfs(i,j)
+        return num_islands
+
+```
+
+### [Rotting Oranges](https://leetcode.com/problems/rotting-oranges/)<a name="rotting-oranges"></a>  
+
+```python
+def orangesRotting(self, grid: List[List[int]]) -> int:
+
+        m = 0
+        q = []
+        dirs = [0,1,0,-1,0]
+        ones = set()
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j] == 2:
+                    q.append((i,j))
+                if grid[i][j] == 1:
+                    ones.add((i,j))
+        
+
+        while q:
+            newq = []
+
+            for x,y in q:
+                for i in range(4):
+                    nx,ny = x+dirs[i],y+dirs[i+1]
+                    if nx >= 0 and ny >= 0 and nx < len(grid) and ny < len(grid[0]) and grid[nx][ny] == 1:
+                        grid[nx][ny] = 2
+                        newq.append((nx,ny))
+                        ones.remove((nx,ny))
+
+            q = newq
+            if q:
+                m += 1
+        
+        if len(ones) > 0:
+            return -1
+        
+        return m
+```
+
+### [Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self/)<a name="product-of-array-except-self"></a>
+
+```python
+def productExceptSelf(self, nums: List[int]) -> List[int]:
+
+        prod_f = [1]
+        prod_b = 1
+        for i in range(len(nums)-1):
+            prod_f.append(prod_f[-1]*nums[i])
+
+        # ret = [1]*len(nums)
+        
+        for i in reversed(range(len(nums))):
+            prod_f[i] = prod_f[i]*prod_b
+            prod_b = prod_b*nums[i]
+
+
+        #now for example the answer for 0 is prod_b[1] * prod_f[0]
+        #the answer for 1 is prod_b[2]*prod_f[1] and so on 
+
+        # ret = []
+        # for i in range(len(nums)):
+        #     ret.append(prod_f[i] *prod_b[i+1])
+        return prod_f
+
+```
+
+### [Min Stack](https://leetcode.com/problems/min-stack/)<a name="min-stack"></a> 
+
+```python
+class MinStack:
+
+    def __init__(self):
+
+        self.stack = []
+        self.min = [math.inf]
+        
+
+    def push(self, val: int) -> None:
+        self.stack.append(val)
+        self.min.append(min(self.min[-1], val))
+        
+
+    def pop(self) -> None:
+        self.stack.pop()
+        self.min.pop()
+
+    def top(self) -> int:
+        return self.stack[-1]
+        
+
+    def getMin(self) -> int:
+        return self.min[-1]
+        
 
 ```
 
