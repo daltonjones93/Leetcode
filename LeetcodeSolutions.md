@@ -44,7 +44,11 @@
 42. [K Closest Points To Origin](#k-closest-points-to-origin)
 43. [Longest Substring Without Repeating Characters](#Longest-Substring-Without-Repeating-Characters)
 44. [3Sum](#3sum)
-45. 
+45. [Course Schedule](#course-schedule)
+46. [Evaluate Reverse Polish Notation](#evaluate-reverse-polish-notation)
+47. [Implement Trie](#implement-trie)
+48. [Coin Change](#coin-change)
+49. 
     
 
 ### [Two Sum](https://leetcode.com/problems/two-sum/)<a name="two-sum"></a>  
@@ -1356,6 +1360,136 @@ def threeSum(self, nums: List[int]) -> List[List[int]]:
                     r -= 1
         return ret
 ```
+
+### [Course Schedule](https://leetcode.com/problems/course-schedule/)<a name="course-schedule"></a>  
+
+```python
+def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+
+        #we just need to find a cycle if one exists
+        if len(prerequisites) == 0:
+            return True
+
+        graph = defaultdict(list)
+        for x,y in prerequisites:
+            graph[y].append(x)
+        
+        #need to find a cycle if it exists
+
+        states = [0]*numCourses
+
+        def dfs(x):
+
+            for nbr in graph[x]:
+                if states[nbr] == 0:
+                    states[nbr] = 1
+                    if not dfs(nbr):
+                        return False
+                    states[nbr] = 2
+                
+                elif states[nbr] == 1:
+                    return False
+            
+            return True
+
+        for i in range(numCourses):
+            if states[i] == 0:
+                states[i] = 1
+                if not dfs(i):
+                    return False
+                states[i] = 2
+        return True
+
+```
+
+### [Evaluate Reverse Polish Notation](https://leetcode.com/problems/evaluate-reverse-polish-notation/)<a name="evaluate-reverse-polish-notation"></a>  
+
+```python
+def evalRPN(self, tokens: List[str]) -> int:
+
+        ops = "+/-*"
+        
+        stack = []
+        for l in tokens:
+            if l not in ops:
+                stack.append(int(l))
+            else:
+                n1 = stack.pop()
+                n2 = stack.pop()
+                if l == "+":
+                    stack.append(n1 + n2)
+                elif l == "-":
+                    stack.append(n2-n1)
+                elif l == "*":
+                    stack.append(n2*n1)
+                elif l == "/":
+                    stack.append(int(n2/n1))
+        
+        return stack[0]
+
+```
+
+### [Implement Trie](https://leetcode.com/problems/implement-trie-prefix-tree/)<a name="implement-trie"></a>  
+Great one to practice, very interesting data structure. 
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.word = False
+
+class Trie:
+
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word: str) -> None:
+        node = self.root
+        for l in word:
+            if l not in node.children:
+                node.children[l] = TrieNode()
+            node = node.children[l]
+        
+        node.word = True
+        
+
+    def search(self, word: str) -> bool:
+        node = self.root
+        for l in word:
+            if l not in node.children:
+                return False
+            node = node.children[l]
+        return node.word
+
+        
+
+    def startsWith(self, prefix: str) -> bool:
+        node = self.root
+        for l in prefix:
+            if l not in node.children:
+                return False
+            node = node.children[l]
+        return True
+```
+
+### [Coin Change](https://leetcode.com/problems/coin-change/)<a name="coin-change"></a> 
+
+```python
+
+def coinChange(self, coins: List[int], amount: int) -> int:
+
+        dp = [math.inf]*(amount + 1)
+        dp[0] = 0
+        for c in coins:
+            for i in range(c,len(dp)):
+                dp[i] = min(1+dp[i-c],dp[i])
+                
+        if dp[-1] == math.inf:
+            return -1
+        
+        return dp[-1]
+
+```
+
 
 
 
