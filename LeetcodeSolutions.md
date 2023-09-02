@@ -53,7 +53,8 @@
 51. [Rotting Oranges](#rotting-oranges)
 52. [Product of Array Except Self](#product-of-array-except-self)
 53. [Min Stack](#min-stack)
-54. 
+54. [Search In Rotated Array](#search-in-rotated-array)
+55. 
     
 
 ### [Two Sum](https://leetcode.com/problems/two-sum/)<a name="two-sum"></a>  
@@ -1637,7 +1638,45 @@ class MinStack:
     def getMin(self) -> int:
         return self.min[-1]
         
+```
 
+### [Search in Rotated Array](https://leetcode.com/problems/search-in-rotated-array/)<a name="search-in-rotated-array"></a>  
+
+```python
+def search(self, nums: List[int], target: int) -> int:
+        #I think there's a way to do this without finding the pivot
+        #I do think finding the pivot is good practice though...
+
+        #find pivot
+        l = 0
+        r = len(nums)-1
+        while l < r:
+            m = (l+r)//2
+            if nums[m] > nums[r]:
+                l = m+1
+            elif nums[l] > nums[m]:
+                r = m
+            else:
+                r = l
+        
+        pivot = l
+        # print(pivot)
+
+        l = 0
+        r = len(nums)
+        while l < r:
+            m = (l+r)//2
+            if nums[int((m+pivot)%len(nums))] == target:
+                return int((m+pivot)%len(nums))
+            elif nums[int((m+pivot)%len(nums))] > target:
+                r = m -1
+            else:
+                l = m+1
+        
+        if nums[int((l+pivot)%len(nums))]== target:
+            return int((l+pivot)%len(nums))
+        
+        return -1
 ```
 
 
