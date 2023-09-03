@@ -54,7 +54,19 @@
 52. [Product of Array Except Self](#product-of-array-except-self)
 53. [Min Stack](#min-stack)
 54. [Search In Rotated Array](#search-in-rotated-array)
-55. 
+55. [Permutations](#permutations)
+56. [Combination Sum](#combination-sum)
+57. [Lowest Common Ancestor of a Binary Tree](#lowest-common-ancestor-of-a-binary-tree)
+58. [Merge Intervals](#merge-intervals)
+59. [Time Based Key-Value Store](#time-based-key-value-store)
+60. [Accounts Merge](#accounts-merge)
+61. [Spiral Matrix](#spiral-matrix)
+62. [String To Integer Atoi](#string-to-integer-atoi)
+63. [Partition Equal Subset Sum](#partition-equal-subset-sum)
+64. [Word Break](#word-break)
+65. [Subsets](#subsets)
+66. 
+
     
 
 ### [Two Sum](https://leetcode.com/problems/two-sum/)<a name="two-sum"></a>  
@@ -1678,6 +1690,400 @@ def search(self, nums: List[int], target: int) -> int:
         
         return -1
 ```
+
+
+### [Permutations](https://leetcode.com/problems/permutations/)<a name="permutations"></a>  
+```python
+def permute(self, nums: List[int]) -> List[List[int]]:
+        
+        self.perms = []
+        self.set = set()
+        def permsearch(l):
+            if len(l) == len(nums):
+                self.perms.append(copy.deepcopy(l))
+                return
+            
+            for i in range(len(nums)):
+                if nums[i] not in l:
+                    l.append(nums[i])
+                    self.set.add(nums[i])
+                    permsearch(l)
+                    l.pop()
+                    self.set.remove(nums[i])
+        
+        permsearch([])
+        return self.perms
+
+```
+
+### [Combination Sum](https://leetcode.com/problems/combination-sum/)<a name="combination-sum"></a> 
+```python
+def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+
+        candidates.sort(reverse = True)
+        self.ret = set()
+
+        def search(l,s, j):
+
+            if s == target:
+                self.ret.add(tuple(l))
+                return
+            
+            for i in range(j, len(candidates)):
+                if candidates[i] + s <= target:
+                    search(l+[candidates[i]], s+candidates[i], i)
+        
+        search([],0,0)
+        return self.ret     
+```
+
+### [Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/)<a name="lowest-common-ancestor-of-a-binary-tree"></a> 
+```python
+def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+
+        #present on both left and right
+        if root == p or root==q:
+            return root
+
+        def search(root):
+            if not root:
+                return None
+            elif root == q or root == p:
+                return root
+            
+            l = search(root.left)
+            r = search(root.right)
+
+            if l and r:
+                return root
+            elif l:
+                return l
+            elif r:
+                return r
+        return search(root)
+```
+
+
+### [Merge Intervals](https://leetcode.com/problems/merge-intervals/)<a name="merge-intervals"></a> 
+```python
+def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        
+
+        intervals.sort()
+        stack = [intervals[0]]
+
+        for i in range(1,len(intervals)):
+            
+            b,e = intervals[i]
+            
+            if b <= stack[-1][1]:
+                stack[-1][1] = max(e,stack[-1][1])
+            else:
+                stack.append(intervals[i])
+        
+        return stack
+```
+### [Time Based Key-Value Store](https://leetcode.com/problems/time-based-key-value-store/)<a name="time-based-key-value-store"></a> 
+```python
+class TimeMap:
+
+    def __init__(self):
+        self.times = defaultdict(list)
+        self.dict = defaultdict(list)
+        
+
+    def set(self, key: str, value: str, timestamp: int) -> None:
+        self.times[key].append(timestamp)
+        self.dict[key].append(value)
+        
+
+    def get(self, key: str, timestamp: int) -> str:
+
+        if key not in self.times:
+            return ""
+        
+        ind = bisect.bisect(self.times[key], timestamp)
+        #bisect_right outputs the index of the first value greater than timestamp.
+
+        if ind == 0:
+            return ""
+        else:
+            return self.dict[key][ind-1]
+
+```
+
+
+
+### [Accounts Merge](https://leetcode.com/problems/accounts-merge/)<a name="accounts-merge"></a> 
+
+```python
+def accountsMerge(self, accounts: List[List[str]]) -> List[List[str]]:
+
+        #build graph
+
+        emailToInd = defaultdict(list)
+        for i in range(len(accounts)):
+            for j in range(1,len(accounts[i])):
+                emailToInd[accounts[i][j]].append(i)
+        
+        graph = defaultdict(list)
+        for email in emailToInd:
+            if len(emailToInd)>1:
+                ind = emailToInd[email][0]
+                for i in range(1,len(emailToInd[email])):
+                    j = emailToInd[email][i]
+                    graph[ind].append(j)
+                    graph[j].append(ind)
+        
+        #find connected components
+        self.visited = set()
+        self.connected_components = []
+
+        def bfs(ind):
+            ret = [ind]
+            q = collections.deque([ind])
+            self.visited.add(ind)
+            while q:
+                n = q.popleft()
+                for nbr in graph[n]:
+                    if nbr not in self.visited:
+                        q.append(nbr)
+                        ret.append(nbr)
+                        self.visited.add(nbr)
+            
+            return ret
+        
+        for i in range(len(accounts)):
+            if i not in self.visited:
+                self.connected_components.append(bfs(i))
+        
+        ret = []
+        for l in self.connected_components:
+            if len(l) == 1:
+                ret.append([accounts[l[0]][0]] + sorted(list(set(accounts[l[0]][1:]))))
+            else:
+                tmp = set()
+                for i in range(len(l)):
+                    for j in range(1,len(accounts[l[i]])):
+                        tmp.add(accounts[l[i]][j])
+                
+                ret.append([accounts[l[0]][0]] + sorted(list(tmp)))
+
+        return ret
+                
+```
+
+### [Spiral Matrix](https://leetcode.com/problems/spiral-matrix/)<a name="spiral-matrix"></a> 
+```python
+def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        
+        lb = 0 
+        rb = len(matrix[0])-1
+        ub = 0
+        bb = len(matrix)-1
+
+        ret = []
+
+        while lb <= rb and ub <= bb:
+
+            for i in range(lb,rb + 1):
+                ret.append(matrix[ub][i])
+            ub += 1
+
+
+            
+            if ub <= bb:
+                for i in range(ub,bb + 1):
+                    
+                    ret.append(matrix[i][rb])
+                rb -= 1
+            else:
+                break
+            
+            # print(lb,rb)
+            if lb <= rb:
+                for i in reversed(range(lb,rb + 1)):
+                    ret.append(matrix[bb][i])
+                bb -= 1
+            else:
+                break
+            if ub <= bb:
+                for i in reversed(range(ub,bb + 1)):
+                    ret.append(matrix[i][lb])
+                lb += 1
+            else:
+                break
+        
+        return ret
+```
+
+### [String To Integer Atoi](https://leetcode.com/problems/string-to-integer-atoi/)<a name="string-to-integer-atoi"></a> 
+
+```python
+def myAtoi(self, s: str) -> int:
+
+        #well let's give it a shot
+        if s == "":
+            return 0
+
+        #first clear out whitespace:
+        ind = 0
+        while ind < len(s) and s[ind] == " ":
+            ind += 1
+        if ind == len(s):
+            return 0
+        neg = False
+        if s[ind] == '-':
+            neg = True
+            ind += 1
+        elif s[ind] == "+":
+            ind += 1
+        
+        #start of number
+        nums = set(list(("1234567890")))
+        
+        if ind == len(s) or s[ind] not in nums:
+            return 0
+        
+        ret = 0
+        next_ind = ind
+        while next_ind < len(s):
+            if s[next_ind] not in nums:
+                break
+            next_ind += 1
+        
+        ret = int(s[ind:next_ind])
+        if neg:
+            ret = -ret
+        if neg:
+            ret = max(ret, -2**31)
+        else:
+            ret = min(2**31 - 1, ret)
+        
+        return ret
+
+```
+
+
+### [Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/)<a name="partition-equal-subset-sum"></a> 
+
+```python
+
+def canPartition(self, nums: List[int]) -> bool:
+
+        #ah, finally one I don't remember. Good thing we're reviewing.
+        #my best guess is since order doesn't matter, we can sort the nums
+        #although, I don't know precisely how that would help
+        #(aside from speeding up the backtracking potentially) and then
+        #we have to backtrack?
+        #oh wait hang on, We can calculate the total sum, then find something that adds up
+        #to sum(nums)//2
+
+        t = sum(nums)
+        if t % 2 == 1:
+            return False
+        target = t//2
+
+        nums.sort(reverse = True) #take big steps initially?
+
+        #this is basically the coin problem
+
+        dp = [True] + [False]*target
+
+        for n in nums:
+            for i in reversed(range(n, len(dp))):
+                dp[i] = dp[i] or dp[i-n]
+        
+        return dp[-1]
+```
+
+
+### [Word Break](https://leetcode.com/problems/word-break/)<a name="word-break"></a> 
+```python
+def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+
+        wordDict = set(wordDict)
+        dp = [False]*(len(s)+1)
+        dp[0] = True
+        for i in range(1,len(s)+1):
+            
+            for j in range(i):
+                dp[i] = dp[i] or (dp[j] and s[j:i] in wordDict)
+                if dp[i]:
+                    break
+        
+        return dp[-1]
+```
+
+### [Sort Colors](https://leetcode.com/problems/sort-colors/)<a name="sort-colors"></a> 
+Honestly the single pass solution is actually slower, asymptotically and empirically.
+```python
+def sortColors(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+
+        # c = collections.Counter(nums)
+        # ind = 0
+        # for i in range(c[0]):
+        #     nums[ind] = 0
+        #     ind += 1
+        # for i in range(c[1]):
+        #     nums[ind] = 1
+        #     ind += 1
+        # for i in range(c[2]):
+        #     nums[ind] = 2
+        #     ind += 1
+
+        #onepass with constant extra space?
+
+        counts = [-1,-1,-1]
+
+        for i in range(len(nums)):
+            if nums[i] == 0:
+                
+                counts[0] += 1
+                counts[1] += 1
+                counts[2] += 1
+                nums[counts[2]] = 2
+                nums[counts[1]] = 1
+                nums[counts[0]] = 0
+                
+            elif nums[i] == 1:
+                counts[1] += 1
+                counts[2] += 1
+                nums[counts[2]] = 2
+                nums[counts[1]] = 1
+                
+            else:
+                counts[2] += 1
+                nums[counts[2]] = 2
+        return nums
+```
+
+### [Subsets](https://leetcode.com/problems/subsets/)<a name="subsets"></a> 
+```python
+def subsets(self, nums: List[int]) -> List[List[int]]:
+
+        # nums.sort()
+
+        #must use backtracking, try to be efficient
+        self.ret = [[]]
+        def search(l,ind):
+            if ind == len(nums):
+                return
+        
+            for i in range(ind, len(nums)):
+
+                l.append(nums[i])
+                self.ret.append(l.copy())
+                search(l,i+1)
+                l.pop()
+        
+        search([],0)
+        return self.ret
+```
+
 
 
 
