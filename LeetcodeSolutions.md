@@ -69,10 +69,11 @@
 67. [Unique Paths](#unique-paths)
 68. [Binary Tree Right Side View](#binary-tree-right-side-view)
 69. [Longest Palindromic Substring](#longest-palindromic-substring)
-70. [Binary Tree Right Side View](#binary-tree-right-side-view)
-71. [Construct Binary Tree From Preorder and Inorder Traversal](#construct-binary-tree-from-preorder-and-inorder-traversal)
-72. [Letter Combinations of a Phone Number](#letter-combinations-of-a-phone-number)
-73. 
+70. [Construct Binary Tree From Preorder and Inorder Traversal](#construct-binary-tree-from-preorder-and-inorder-traversal)
+71. [Letter Combinations of a Phone Number](#letter-combinations-of-a-phone-number)
+72. [Word Search](#word-search)
+73. [Find Anagrams](#find-anagrams)
+74. 
 
     
 
@@ -2197,28 +2198,6 @@ def longestPalindrome(self, s: str) -> str:
         return mxstr
 ```
 
-### [Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view/)<a name="binary-tree-right-side-view"></a> 
-```python
-def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
-        
-        if not root:
-            return []
-        q = [root]
-        ret = [root.val]
-        while q:
-            newq = []
-            for n in q:
-                if n.left:
-                    newq.append(n.left)
-                if n.right:
-                    newq.append(n.right)
-            
-            if newq:
-                ret.append(newq[-1].val)
-            q = newq
-        return ret
-```
-
 ### [Construct Binary Tree From Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)<a name="construct-binary-tree-from-preorder-and-inorder-traversal"></a> 
 ```python
 def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
@@ -2259,4 +2238,77 @@ def letterCombinations(self, digits: str) -> List[str]:
         return self.ret
 ```
 
+### [Word Search](https://leetcode.com/problems/word-search/)<a name="word-search"></a> 
+```python
+def exist(self, board, word):
+        """
+        :type board: List[List[str]]
+        :type word: str
+        :rtype: bool
+        """
+
+        s1 = set(word)
+        s2 = set(board[0])
+        for i in range(1,len(board)):
+            s2 = s2.union(set(board[i]))
+        
+        for l in s1:
+            if l not in s2:
+                return False
+
+        def dfs(i, j, l, visited):
+
+            if l == len(word):
+                return True
+
+            elif (i,j) in visited:
+                return False
+
+            elif board[i][j] != word[l]:
+                return False
+
+            elif board[i][j] == word[l] and l == len(word) - 1:
+                return True
+
+            dirs = [0,1,0,-1,0]
+            bools = []
+            visited.append((i,j))
+            for k in range(4):
+                if (0 <= i + dirs[k] < len(board)) and (0 <= j + dirs[k + 1] < len(board[0])):
+                    bools.append(dfs(i + dirs[k], j + dirs[k+1], l + 1, visited))
+            
+            if any(bools):
+                return True
+            else:
+                visited.pop()
+            
+            
+
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if dfs(i,j, 0, []):
+                    return True
+
+        return False
+
+```
+
+### [Find Anagrams](https://leetcode.com/problems/find-anagrams/)<a name="find-anagrams"></a> 
+```python
+def findAnagrams(self, s: str, p: str) -> List[int]:
+        #great, more counting
+
+        cp = collections.Counter(p)
+        
+        c = collections.Counter(s[:len(p)])
+        ret = []
+        for i in range(len(p),len(s)):
+            if c == cp:
+                ret.append(i-len(p))
+            c[s[i-len(p)]] -= 1
+            c[s[i]] += 1
+        if c == cp:
+            ret.append(len(s)-len(p))
+        return ret
+```
 
