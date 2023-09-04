@@ -65,7 +65,14 @@
 63. [Partition Equal Subset Sum](#partition-equal-subset-sum)
 64. [Word Break](#word-break)
 65. [Subsets](#subsets)
-66. 
+66. [Container With Most Water](#container-with-most-water)
+67. [Unique Paths](#unique-paths)
+68. [Binary Tree Right Side View](#binary-tree-right-side-view)
+69. [Longest Palindromic Substring](#longest-palindromic-substring)
+70. [Binary Tree Right Side View](#binary-tree-right-side-view)
+71. [Construct Binary Tree From Preorder and Inorder Traversal](#construct-binary-tree-from-preorder-and-inorder-traversal)
+72. [Letter Combinations of a Phone Number](#letter-combinations-of-a-phone-number)
+73. 
 
     
 
@@ -2085,8 +2092,171 @@ def subsets(self, nums: List[int]) -> List[List[int]]:
 ```
 
 
+### [Container With Most Water](https://leetcode.com/problems/container-with-most-water/)<a name="container-with-most-water"></a> 
+```python
+def maxArea(self, height: List[int]) -> int:
+
+        water = 0
+        l = 0
+        r = len(height)-1
+        while l < r:
+            water = max(water, min(height[l],height[r]) * (r-l))
+            if height[l] < height[r]: #anything including l that is smaller must have strictly smaller water
+                l += 1
+            else:
+                r -= 1
+
+        return water
+
+```
+
+### [Unique Paths](https://leetcode.com/problems/unique-paths/)<a name="unique-paths"></a> 
+```python
+def uniquePaths(self, m: int, n: int) -> int:
+        
+
+        #less space efficient (O(nm))
+        # dp = [[0]*n for _ in range(m)]
+        
+        # for i in range(n):
+        #     dp[0][i] = 1
+        # for i in range(1,m):
+        #     dp[i][0] = 1
+        
+        # for i in range(1,m):
+        #     for j in range(1,n):
+        #         dp[i][j] = dp[i-1][j] + dp[i][j-1]
+
+        if m < n:
+            return self.uniquePaths(n,m)
+        dp = [1]*n
+        for i in range(1,m):
+            for j in range(1,n):
+                dp[j] = dp[j-1] + dp[j]
+            
+        
+        return dp[-1]
+```
 
 
+### [Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view/)<a name="binary-tree-right-side-view"></a> 
+```python
+def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
+        
+        if not root:
+            return []
+        q = [root]
+        ret = [root.val]
+        while q:
+            newq = []
+            for n in q:
+                if n.left:
+                    newq.append(n.left)
+                if n.right:
+                    newq.append(n.right)
+            
+            if newq:
+                ret.append(newq[-1].val)
+            q = newq
+        return ret
+```
 
+### [Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/)<a name="longest-palindromic-substring"></a> 
+```python
+def longestPalindrome(self, s: str) -> str:
+        
+        #could this be a stack problem maybe?
+        #no
+        #here's a thought.
+        #go through and keep track of len one and len two substring using pairs
+        #of indices, then just build on each one that you can until you can't anymore
+        #not sure this would be faster, but it's worth a shot. it's definitely faster actually
+        #but worse for memory
+
+        palindromes = set([(i,i) for i in range(len(s))])
+
+        mxstr = s[0]
+
+        for i in range(len(s)-1):
+            if s[i] == s[i+1]:
+                palindromes.add((i,i+1))
+                mxstr = s[i:i+2]
+        
+        while palindromes:
+            # print(palindromes)
+            newset = set()
+            for i,j in palindromes:
+                
+                # palindromes.remove((i,j))
+                if i > 0 and j < len(s)-1 and s[i-1] == s[j+1]:
+                    newset.add((i-1,j+1))
+                    if (j+2-(i-1)) > len(mxstr):
+                        mxstr = s[i-1:j+2]
+            palindromes = newset
+        
+        return mxstr
+```
+
+### [Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view/)<a name="binary-tree-right-side-view"></a> 
+```python
+def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
+        
+        if not root:
+            return []
+        q = [root]
+        ret = [root.val]
+        while q:
+            newq = []
+            for n in q:
+                if n.left:
+                    newq.append(n.left)
+                if n.right:
+                    newq.append(n.right)
+            
+            if newq:
+                ret.append(newq[-1].val)
+            q = newq
+        return ret
+```
+
+### [Construct Binary Tree From Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)<a name="construct-binary-tree-from-preorder-and-inorder-traversal"></a> 
+```python
+def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+
+        if not preorder:
+            return None
+
+        root = TreeNode(preorder[0])
+        ind = inorder.index(preorder[0])
+        root.left = self.buildTree(preorder[1:ind+1],inorder[:ind])
+        root.right = self.buildTree(preorder[ind+1:],inorder[ind+1:])
+
+        return root
+
+```
+
+
+### [Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/)<a name="letter-combinations-of-a-phone-number"></a> 
+```python
+def letterCombinations(self, digits: str) -> List[str]:
+
+        if not digits:
+            return []
+
+        digdict = {2:"abc", 3: "def", 4:"ghi",5:"jkl",6:"mno",7:"pqrs",8:"tuv",9:"wxyz"}
+
+        self.ret = []
+        # @cache
+        def search(s,ind):
+            if ind == len(digits):
+                self.ret.append(s)
+                return
+            
+            for l in digdict[int(digits[ind])]:
+                search(s+l,ind+1)
+        
+        search("",0)
+        return self.ret
+```
 
 
