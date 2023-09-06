@@ -73,7 +73,21 @@
 71. [Letter Combinations of a Phone Number](#letter-combinations-of-a-phone-number)
 72. [Word Search](#word-search)
 73. [Find Anagrams](#find-anagrams)
-74. 
+74. [Daily Temperatures](#daily-temperatures)
+75. [Kth Smallest Element in a Binary Search Tree](#kth-smallest-element-in-a-binary-search-tree)
+76. [House Robber](#house-robber)
+77. [Task Scheduler](#task-scheduler)
+78. [Minimum Height Trees](#minimum-height-trees)
+79. [Gas Station](#gas-station)
+80. [Valid Sudoku](#valid-sudoku)
+81. [Next Permutation](#next-permutation)
+82. [Maximum Product Subarray](#maximum-product-subarray)
+83. [Remove Nth Node From End of List](#remove-nth-node-from-end-of-list)
+84. [Design Add and Search Words Data Structure](#design-add-and-search-words-data-structure)
+85. [Pacific Atlantic Water Flow](#pacific-atlantic-water-flow)
+86. [Group Anagrams](#group-anagrams)
+87. [Swap Nodes in Pairs](#swap-nodes-in-pairs)
+88. 
 
     
 
@@ -2311,4 +2325,474 @@ def findAnagrams(self, s: str, p: str) -> List[int]:
             ret.append(len(s)-len(p))
         return ret
 ```
+
+### [Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)<a name="daily-temperatures"></a>
+```python
+def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+
+
+        #this is a stack question I believe. 
+        # you want to annihilate elements on end of stack when you're temp is greater
+        #and keep track of inds at the same time
+
+        stack = []
+
+        answer = [0]*len(temperatures)
+
+        for i,t in enumerate(temperatures):
+
+            if not stack or t <= stack[-1][0]:
+                stack.append((t,i))
+            else:
+                while stack and t > stack[-1][0]:
+                    answer[stack[-1][1]] = i - stack[-1][1]
+                    stack.pop()
+                
+                stack.append((t,i))
+                
+        return answer
+```
+
+### [Kth Smallest Element in Binary Search Tree](https://leetcode.com/problems/kth-smallest-element-in-a-bs/)<a name="kth-smallest-element-in-a-bs"></a>
+
+```python
+def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+
+        self.cnt = 0
+        self.val = 0
+        def inorder(root):
+            if not root:
+                return
+            inorder(root.left)
+            
+            self.cnt +=1
+            if self.cnt == k:
+                self.val = root.val
+                return
+            
+            inorder(root.right)
+        
+        inorder(root)
+        return self.val
+
+```
+
+### [House Robber](https://leetcode.com/problems/house-robber/)<a name="house-robber"></a>
+
+```python
+def rob(self, nums: List[int]) -> int:
+
+        if len(nums) == 1:
+            return nums[0]
+        elif len(nums) == 2:
+            return max(nums)
+        elif len(nums) == 3:
+            return max(nums[1], nums[0]+ nums[2])
+        prevprev = nums[0]
+        prev = nums[1]
+        curr = prevprev + nums[2]
+
+
+        for i in range(3,len(nums)):
+            nxt = max(prevprev + nums[i], prev +nums[i])
+            prevprev = prev
+            prev = curr
+            curr = nxt
+        
+        return max(curr,prev)
+```
+
+### [Task Scheduler](https://leetcode.com/problems/task-scheduler/)<a name="task-scheduler"></a>
+```python
+def leastInterval(self, tasks: List[str], n: int) -> int:
+
+
+
+        c = collections.Counter(tasks)
+
+        max_val = max(v for v in c.values())
+
+        tasklen = (max_val -1)*(n+1)
+        nmax = sum(v == max_val for v in c.values())
+
+        #the intuition here is that you need max_val-1 full cycles of length n+1 to clear out 
+        #the tasks, nmax is the runover after those cycles
+        #still hazy on the intuition as to why the below works honestly. I prefer my other solution 
+        #in terms of clarity
+
+        return max(len(tasks), tasklen + nmax)
+
+
+        taskorder = sorted(c.keys(),key = lambda x:c[x], reverse = True)
+
+
+
+        most_recent = {k:-1 for k in c}
+
+        tasks = []
+        while c:
+            found = False
+            for k in taskorder:
+                if k in c and (most_recent[k] == -1 or len(tasks)-most_recent[k] > n):
+                    tasks.append(k)
+                    most_recent[k] = len(tasks)-1
+                    found = True
+                    c[k] -= 1
+                    if c[k] == 0:
+                        del c[k], most_recent[k]
+                    break
+            if not found:
+                tasks.append(0)
+            taskorder = sorted(c.keys(),key = lambda x:c[x], reverse = True)
+        return len(tasks)
+```
+
+
+### [Minimum Height Trees](https://leetcode.com/problems/minimum-height-trees/)<a name="minimum-height-trees"></a>
+```python
+def findMinHeightTrees(self, n: int, edges: List[List[int]]) -> List[int]:
+
+        #the intuition here: do not pick a leaf. Pick something as far away from
+        #all leaves as possible. sort of a bfs
+
+        if n == 1:
+            return [0]
+
+        graph = defaultdict(set)
+        for x,y in edges:
+            graph[x].add(y)
+            graph[y].add(x)
+
+        leaves = []
+
+        for n in graph:
+            if len(graph[n]) == 1:
+                leaves.append(n)
+
+        ret = leaves
+        while graph:
+            newleaves = []
+            for n in leaves:
+                if len(graph[n]) > 0:
+                    checkleaf = next(iter(graph[n]))
+                    if checkleaf in graph:
+                        graph[checkleaf].remove(n)
+                        
+                        if len(graph[checkleaf])==1:
+                            newleaves.append(checkleaf)
+                del graph[n]
+            if newleaves:
+                ret = newleaves
+            leaves = newleaves
+        return ret
+```
+
+### [Gas Station](https://leetcode.com/problems/gas-station/)<a name="gas-station"></a>
+This is definitely worth doing again.
+```python
+def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
+
+        if sum(cost) > sum(gas):
+            return -1
+        
+        s = 0
+        ind = 0
+        for i in range(len(gas)):
+            s += gas[i]-cost[i]
+            if s < 0:
+                s = 0
+                ind = i + 1
+        return ind
+
+```
+
+
+### [Valid Sudoku](https://leetcode.com/problems/valid-sudoku/)<a name="valid-sudoku"></a>
+```python
+def isValidSudoku(self, board: List[List[str]]) -> bool:
+        
+        for i in range(9):
+            c = collections.Counter(board[i])
+            for k in c:
+                if k != ".":
+                    if c[k] > 1:
+                        
+                        return False
+        
+        for i in range(9):
+            c = collections.Counter()
+            for j in range(9):
+                if board[j][i] != ".":
+                    k = board[j][i]
+                    c[k] += 1
+                    if c[k] > 1:
+                        return False
+
+        for i in range(3):
+            for j in range(3):
+                c = collections.Counter()
+                for ii in range(3):
+                    for jj in range(3):
+                        indi = (3*i) + ii
+                        indj = (3*j) + jj
+                        k = board[indi][indj]
+                        if k != ".":
+                            c[k] += 1
+                            if c[k] > 1:
+                                # print(i,j,ii,jj, indi, indj, c)
+                                return False
+
+        return True
+```
+
+### [Next Permutation](https://leetcode.com/problems/next-permutation/)<a name="next-permutation"></a>
+```python
+def nextPermutation(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+
+
+        ind = len(nums)-2
+        while ind >=0:
+            if nums[ind] < nums[ind+1]:
+                break
+            ind -=1
+        
+        if ind != -1:
+            for i in reversed(range(ind+1,len(nums))):
+                if nums[i] > nums[ind]:
+                    nums[i],nums[ind] = nums[ind],nums[i]
+                    break
+                    # print(i,ind)
+     
+        
+        l = ind + 1
+        r = len(nums)-1
+        while l < r:
+            nums[l],nums[r] = nums[r], nums[l]
+            l +=1
+            r -=1 
+
+```
+
+### [Maximum Product Subarray](https://leetcode.com/problems/maximum-product-subarray/)<a name="maximum-product-subarray"></a>
+
+```python
+def maxProduct(self, nums: List[int]) -> int:
+
+        
+        mn = 1
+        mx = 1
+        ret = -math.inf
+
+        #we want to track the maximum value including i and the minimum value including i
+        #should be able to do it without an array...
+        for i in range(len(nums)):
+            newmx = max(nums[i], mx*nums[i], mn*nums[i])
+            newmn = min(nums[i],mx*nums[i],mn*nums[i])
+            mx,mn = newmx,newmn
+            ret = max(ret,mx)
+        return ret
+
+```
+
+### [Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)<a name="remove-nth-node-from-end-of-list"></a>
+
+```python
+def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+
+
+        fast = head
+        slow = head
+        cnt = 0
+        while cnt < n:
+            fast = fast.next
+            cnt +=1
+        
+        if not fast:
+            return head.next
+        
+        while fast and fast.next:
+            fast = fast.next
+            slow = slow.next
+        
+        #remove slow.next
+        slow.next = slow.next.next
+        return head
+```
+
+### [Design Add and Search Words Data Structure](https://leetcode.com/problems/design-add-and-search-words-data-structure/)<a name="design-add-and-search-words-data-structure"></a>  
+
+```python
+class TrieNode():
+    def __init__(self):
+        self.children = {}
+        self.word = False
+
+class WordDictionary:
+
+    def __init__(self):
+        self.root = TrieNode()
+
+    def addWord(self, word: str) -> None:
+        node = self.root
+        for l in word:
+            if l not in node.children:
+                node.children[l] = TrieNode()
+            node = node.children[l]
+        node.word = True
+        
+
+    def search(self, word: str) -> bool:
+
+        return self.dfs(self.root, word, 0)
+    
+    def dfs(self, node, word, ind):
+
+        if ind == len(word):
+            return node.word
+
+        l = word[ind]
+        if l != ".":
+            if l in node.children:
+                if self.dfs(node.children[l], word, ind+1):
+                    return True
+            
+        else:
+            for nl in node.children:
+                if self.dfs(node.children[nl], word, ind+1):
+                    return True
+        
+        return False
+```
+
+
+### [Pacific Atlantic Water Flow](https://leetcode.com/problems/pacific-atlantic-water-flow/)<a name="pacific-atlantic-water-flow"></a>
+
+```python
+def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+
+        #do a bfs from points on the boundary 
+
+        if len(heights) == 1 or len(heights[0]) == 1:
+            ret = set()
+            for i in range(len(heights)):
+                for j in range(len(heights[0])):
+                    ret.add((i,j))
+            return ret
+
+        self.ret = set([(0,len(heights[0])-1), (len(heights)-1, 0)])
+
+        flow = [[0]*len(heights[0]) for _ in range(len(heights))]
+        for i in range(len(heights[0])):
+            flow[0][i] = 'P'
+            flow[len(heights)-1][i] = 'A'
+        for i in range(len(heights)):
+            if flow[i][0] == 'A':
+                flow[i][0] = 'B'
+                self.ret.add((i,0))
+            else:
+                flow[i][0] = 'P'
+            if flow[i][len(heights[0])-1] == 'P':
+                flow[i][len(heights[0])-1] = 'B'
+                self.ret.add((i,len(heights[0])-1))
+            else:
+                flow[i][len(heights[0])-1] = 'A'
+        
+        # flow[0][len(heights[0])-1] = 'B'
+        # flow[len(heights)-1][0] = 'B'
+
+        def bfs(x, y):
+            visited = set([(x,y)])
+            dirs = [0,1,0,-1,0]
+            q = collections.deque([(x,y)])
+            while q:
+                
+                i,j = q.popleft()
+                for k in range(4):
+                    ni,nj = i +dirs[k], j+dirs[k+1]
+                    if ni >= 0 and nj >= 0 and ni < len(heights) and nj < len(heights[0]) and heights[ni][nj] >= heights[i][j] and (ni,nj) not in visited:
+                        visited.add((ni,nj))
+                        q.append((ni,nj))
+                        if flow[ni][nj] == 0:
+                            flow[ni][nj] = flow[i][j]
+                            if flow[ni][nj] == 'B':
+                                self.ret.add((ni,nj))
+                        elif flow[ni][nj] != flow[i][j]:
+                            flow[ni][nj] = 'B'
+                            self.ret.add((ni,nj))
+        
+        
+        for i in range(len(heights[0])):
+            bfs(0,i)
+            bfs(len(heights)-1,i)
+        for i in range(len(heights)):
+            bfs(i,0)
+            bfs(i, len(heights[0])-1)
+        
+
+        return self.ret
+            
+```
+
+### [Group Anagrams](https://leetcode.com/problems/group-anagrams/)<a name="group-anagrams"></a>
+```python
+def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+
+
+        
+        cosets = set(["".join(sorted(s)) for s in strs])
+
+        ret = [[] for _ in range(len(cosets))]
+        cnt = 0
+        an_map = {}
+        for c in cosets:
+            an_map[c] = cnt
+            cnt += 1
+        for s in strs:
+            ret[an_map["".join(sorted(s))]].append(s)
+        return ret
+
+```
+
+### [Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/)<a name="swap-nodes-in-pairs"></a>
+```python
+def swapPairs(self, head: Optional[ListNode]) -> Optional[ListNode]:
+
+        if not head or not head.next:
+            return head
+        
+        dummy = ListNode(-1, head)
+
+        prev = dummy
+        f1 = head
+        f2 = head.next
+        nxt = head.next.next
+
+        while prev != None and f1 != None and f2 != None:
+            f2.next = f1
+            f1.next = nxt
+            prev.next = f2
+            prev = f1
+            f1 = nxt
+            if f1 == None:
+                break
+            f2 = f1.next
+            if f2 == None:
+                break
+            nxt = f2.next
+
+        
+        return dummy.next
+```
+
+
+
+
+
+
+
+
+
 
